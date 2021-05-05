@@ -4,6 +4,11 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>MDD4All_Github.snk</AssemblyOriginatorKeyFile>
+    <Company>MDD4All.de</Company>
+    <Authors>Dr. Oliver Alt</Authors>
+    <Description>Data Access for Jira REST API</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Copyright>(c) MDD4All.de</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
