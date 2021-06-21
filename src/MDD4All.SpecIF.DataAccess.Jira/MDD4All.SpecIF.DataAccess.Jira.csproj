@@ -13,8 +13,8 @@
 
   <ItemGroup>
     <PackageReference Include="MDD4All.Jira.DataModels" Version="2.0.0.3" />
-    <PackageReference Include="MDD4All.SpecIF.DataFactory" Version="2.0.0.7" />
-    <PackageReference Include="MDD4All.SpecIF.DataModels.Manipulation" Version="2.0.0.2" />
+    <PackageReference Include="MDD4All.SpecIF.DataFactory" Version="2.1.0.9" />
+    <PackageReference Include="MDD4All.SpecIF.DataModels.Manipulation" Version="2.1.0.4" />
     <PackageReference Include="ReverseMarkdown" Version="3.19.0" />
     <PackageReference Include="StrongNamer" Version="0.2.5" />
   </ItemGroup>
