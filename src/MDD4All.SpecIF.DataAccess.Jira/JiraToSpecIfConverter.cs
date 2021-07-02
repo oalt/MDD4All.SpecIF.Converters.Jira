@@ -95,6 +95,55 @@ namespace MDD4All.SpecIF.DataAccess.Jira
 
             result.SetPropertyValue("dcterms:description", descriptionHtml, _metadataReader, TextFormat.XHTML);
 
+            string lifecycleStatus = ConvertJiraStatusToSpecIfLifeCycleStatus(jiraIssue);
+            result.SetPropertyValue("SpecIF:LifeCycleStatus", lifecycleStatus, _metadataReader);
+
+            return result;
+        }
+
+        private string ConvertJiraStatusToSpecIfLifeCycleStatus(Jira3.Issue jiraIssue)
+        {
+            string result = "";
+
+            Jira3.Status status = jiraIssue.Fields.Status;
+
+            string statusValue = status.Name.ToLowerInvariant();
+
+            switch(statusValue)
+            {
+                case "drafted":
+                    result = "V-Status-3";
+                    break;
+
+                case "rejected":
+                    result = "V-Status-1";
+                    break;
+
+                case "deprecated":
+                    result = "V-Status-0";
+                    break;
+
+                case "submitted":
+                    result = "V-Status-4";
+                    break;
+
+                case "approved":
+                    result = "V-Status-5";
+                    break;
+
+                case "completed":
+                    result = "V-Status-6";
+                    break;
+
+                case "verified":
+                    result = "V-Status-9";
+                    break;
+
+                case "released":
+                    result = "V-Status-7";
+                    break;
+            }
+
             return result;
         }
 
