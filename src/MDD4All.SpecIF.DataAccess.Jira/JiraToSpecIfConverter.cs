@@ -5,6 +5,7 @@ using MDD4All.SpecIF.DataModels.Manipulation;
 using MDD4All.SpecIF.DataModels.Helpers;
 using System.Collections.Generic;
 using MDD4All.SpecIF.DataFactory;
+using Newtonsoft.Json.Linq;
 
 namespace MDD4All.SpecIF.DataAccess.Jira
 {
@@ -87,13 +88,200 @@ namespace MDD4All.SpecIF.DataAccess.Jira
 
             result.SetPropertyValue("dcterms:identifier", jiraIssue.Key, _metadataReader);
 
-            result.SetPropertyValue("dcterms:title", jiraIssue.Fields.Summary, _metadataReader);
+            
 
             AdfToXhtmlConverter adfToXhtmlConverter = new AdfToXhtmlConverter();
 
             string descriptionHtml = adfToXhtmlConverter.ConvertAdfToXhtml(jiraIssue.Fields.Description);
 
-            result.SetPropertyValue("dcterms:description", descriptionHtml, _metadataReader, TextFormat.XHTML);
+            
+
+            string mainLanguage = "en";
+
+            string languageFieldID = GetCustomFieldName(jiraIssue, "Language");
+            if (!string.IsNullOrEmpty(languageFieldID))
+            {
+                JObject language = jiraIssue.FieldDictionary[languageFieldID] as JObject;
+
+                if (language != null)
+                {
+                    string languageValue = (string)language["value"];
+
+                    if (!string.IsNullOrEmpty(languageValue))
+                    {
+                        if (languageValue.ToLower().StartsWith("de"))
+                        {
+                            mainLanguage = "de";
+                        }
+                        else if (languageValue.ToLower().StartsWith("en"))
+                        {
+                            mainLanguage = "en";
+                        }
+                        else if (languageValue.ToLower().StartsWith("zh"))
+                        {
+                            mainLanguage = "zh";
+                        }
+                    }
+                }
+            }
+
+            string secondLanguage = "de";
+            
+            string foreignLanguageFieldID = GetCustomFieldName(jiraIssue, "Foreign Language");
+            if (!string.IsNullOrEmpty(foreignLanguageFieldID))
+            {
+                JObject foreignLanguage = jiraIssue.FieldDictionary[foreignLanguageFieldID] as JObject;
+                if (foreignLanguage != null)
+                {
+                    string foreignLanguageValue = (string)foreignLanguage["value"];
+
+                    if (!string.IsNullOrEmpty(foreignLanguageValue))
+                    {
+
+                        if (foreignLanguageValue.ToLower().StartsWith("en"))
+                        {
+                            secondLanguage = "en";
+                        }
+                        else if (foreignLanguageValue.ToLower().StartsWith("de"))
+                        {
+                            secondLanguage = "de";
+                        }
+                        else if (foreignLanguageValue.ToLower().StartsWith("zh"))
+                        {
+                            secondLanguage = "zh";
+                        }
+                    }
+                }
+            }
+
+            if(mainLanguage == secondLanguage)
+            {
+                if(mainLanguage == "en")
+                {
+                    secondLanguage = "de";
+                }
+                else if(mainLanguage == "de")
+                {
+                    secondLanguage = "en";
+                }
+                else
+                {
+                    mainLanguage = "en";
+                }
+            }
+
+            string mainTitleContent = jiraIssue.Fields.Summary;
+            string mainDescriptionContent = descriptionHtml;
+
+            string secondTitleFieldID = GetCustomFieldName(jiraIssue, "Foreign Title");
+            string secondTitleContent = "";
+
+            if(!string.IsNullOrEmpty(secondTitleFieldID))
+            {
+                secondTitleContent = (string)jiraIssue.FieldDictionary[secondTitleFieldID];
+            }
+
+            string secondDescriptionFieldID = GetCustomFieldName(jiraIssue, "Foreign Description");
+            string secondDescriptionContent = "";
+
+            if(!string.IsNullOrEmpty(secondDescriptionFieldID))
+            {
+                JObject secondDescriptionJobject = jiraIssue.FieldDictionary[secondDescriptionFieldID] as JObject;
+
+                if (secondDescriptionJobject != null)
+                {
+                    Jira3.ADF.AtlassianDocumentFormat secondDescriptionADF = secondDescriptionJobject.ToObject<Jira3.ADF.AtlassianDocumentFormat>();
+
+                    secondDescriptionContent = adfToXhtmlConverter.ConvertAdfToXhtml(secondDescriptionADF);
+                }
+            }
+
+            Value titleValue = new Value();
+            Value descriptionValue = new Value();
+
+            if (mainLanguage == "en")
+            {
+                MultilanguageText firstTitle = new MultilanguageText
+                {
+                    Text = mainTitleContent,
+                    Language = mainLanguage,
+                    Format = TextFormat.Plain
+                };
+
+                titleValue.MultilanguageText.Add(firstTitle);
+
+                MultilanguageText secondTitle = new MultilanguageText
+                {
+                    Text = secondTitleContent,
+                    Language = secondLanguage,
+                    Format = TextFormat.Plain
+                };
+
+                titleValue.MultilanguageText.Add(secondTitle);
+
+                MultilanguageText firstDescription = new MultilanguageText
+                {
+                    Text = mainDescriptionContent,
+                    Language = mainLanguage,
+                    Format = TextFormat.XHTML
+                };
+
+                descriptionValue.MultilanguageText.Add(firstDescription);
+
+                MultilanguageText secondDescription = new MultilanguageText
+                {
+                    Text = secondDescriptionContent,
+                    Language = secondLanguage,
+                    Format = TextFormat.XHTML
+                };
+
+                descriptionValue.MultilanguageText.Add(secondDescription);
+
+            }
+            else if(secondLanguage == "en")
+            {
+                MultilanguageText firstTitle = new MultilanguageText
+                {
+                    Text = secondTitleContent,
+                    Language = secondLanguage,
+                    Format = TextFormat.Plain
+                };
+
+                titleValue.MultilanguageText.Add(firstTitle);
+
+                MultilanguageText secondTitle = new MultilanguageText
+                {
+                    Text = mainTitleContent,
+                    Language = mainLanguage,
+                    Format = TextFormat.Plain
+                };
+
+                titleValue.MultilanguageText.Add(secondTitle);
+
+                MultilanguageText firstDescription = new MultilanguageText
+                {
+                    Text = secondDescriptionContent,
+                    Language = "en",
+                    Format = TextFormat.XHTML
+                };
+
+                descriptionValue.MultilanguageText.Add(firstDescription);
+
+                MultilanguageText secondDescription = new MultilanguageText
+                {
+                    Text = mainDescriptionContent,
+                    Language = mainLanguage,
+                    Format = TextFormat.XHTML
+                };
+
+                descriptionValue.MultilanguageText.Add(secondDescription);
+            }
+
+            result.SetPropertyValue("dcterms:title", titleValue, _metadataReader);
+
+            //jiraIssue.FieldDictionary[""];
+
+            result.SetPropertyValue("dcterms:description", descriptionValue, _metadataReader);
 
             string lifecycleStatus = ConvertJiraStatusToSpecIfLifeCycleStatus(jiraIssue);
             result.SetPropertyValue("SpecIF:LifeCycleStatus", lifecycleStatus, _metadataReader);
@@ -165,6 +353,29 @@ namespace MDD4All.SpecIF.DataAccess.Jira
 
             return result;
         }
+
+        private string GetCustomFieldName(Jira3.Issue issue, string customFieldTitle)
+        {
+            string result = "";
+
+            if (issue.FieldNames != null)
+            {
+                foreach (KeyValuePair<string, string> keyValuePair in issue.FieldNames)
+                {
+                    if (keyValuePair.Value == customFieldTitle)
+                    {
+                        result = keyValuePair.Key;
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+       
+
+
         public Resource ConvertToResource(Jira3.JiraWebhookObject jiraWebhookObject)
         {
             Resource result;
