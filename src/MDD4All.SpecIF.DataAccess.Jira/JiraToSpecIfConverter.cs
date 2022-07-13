@@ -208,7 +208,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
                     Format = TextFormat.Plain
                 };
 
-                titleValue.MultilanguageText.Add(firstTitle);
+                titleValue.MultilanguageTexts.Add(firstTitle);
 
                 MultilanguageText secondTitle = new MultilanguageText
                 {
@@ -217,7 +217,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
                     Format = TextFormat.Plain
                 };
 
-                titleValue.MultilanguageText.Add(secondTitle);
+                titleValue.MultilanguageTexts.Add(secondTitle);
 
                 MultilanguageText firstDescription = new MultilanguageText
                 {
@@ -226,7 +226,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
                     Format = TextFormat.XHTML
                 };
 
-                descriptionValue.MultilanguageText.Add(firstDescription);
+                descriptionValue.MultilanguageTexts.Add(firstDescription);
 
                 MultilanguageText secondDescription = new MultilanguageText
                 {
@@ -235,7 +235,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
                     Format = TextFormat.XHTML
                 };
 
-                descriptionValue.MultilanguageText.Add(secondDescription);
+                descriptionValue.MultilanguageTexts.Add(secondDescription);
 
             }
             else if(secondLanguage == "en")
@@ -247,7 +247,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
                     Format = TextFormat.Plain
                 };
 
-                titleValue.MultilanguageText.Add(firstTitle);
+                titleValue.MultilanguageTexts.Add(firstTitle);
 
                 MultilanguageText secondTitle = new MultilanguageText
                 {
@@ -256,7 +256,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
                     Format = TextFormat.Plain
                 };
 
-                titleValue.MultilanguageText.Add(secondTitle);
+                titleValue.MultilanguageTexts.Add(secondTitle);
 
                 MultilanguageText firstDescription = new MultilanguageText
                 {
@@ -265,7 +265,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
                     Format = TextFormat.XHTML
                 };
 
-                descriptionValue.MultilanguageText.Add(firstDescription);
+                descriptionValue.MultilanguageTexts.Add(firstDescription);
 
                 MultilanguageText secondDescription = new MultilanguageText
                 {
@@ -274,7 +274,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
                     Format = TextFormat.XHTML
                 };
 
-                descriptionValue.MultilanguageText.Add(secondDescription);
+                descriptionValue.MultilanguageTexts.Add(secondDescription);
             }
 
             result.SetPropertyValue("dcterms:title", titleValue, _metadataReader);
