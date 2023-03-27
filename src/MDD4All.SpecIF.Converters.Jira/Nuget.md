@@ -1,0 +1,1 @@
+﻿Data converters to convert Jira issues to SpecIF and vice versa.

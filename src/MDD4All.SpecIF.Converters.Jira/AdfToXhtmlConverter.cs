@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace MDD4All.SpecIF.DataAccess.Jira
+namespace MDD4All.SpecIF.Converters.Jira
 {
     public class AdfToXhtmlConverter
     {

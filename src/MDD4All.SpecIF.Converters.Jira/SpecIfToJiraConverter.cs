@@ -1,10 +1,4 @@
-﻿using MDD4All.Jira.DataModels;
-using MDD4All.SpecIF.DataModels;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MDD4All.SpecIF.DataAccess.Jira
+﻿namespace MDD4All.SpecIF.Converters.Jira
 {
     public class SpecIfToJiraConverter
     {

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using MDD4All.SpecIF.DataFactory;
 using Newtonsoft.Json.Linq;
 
-namespace MDD4All.SpecIF.DataAccess.Jira
+namespace MDD4All.SpecIF.Converters.Jira
 {
     public class JiraToSpecIfConverter
     {
@@ -66,8 +66,8 @@ namespace MDD4All.SpecIF.DataAccess.Jira
 
             result.ChangedAt = jiraIssue.Fields.Updated.Value;
 
-            if(jiraIssue.ChangeLog.Total == 0)
-            { 
+            if (jiraIssue.ChangeLog.Total == 0)
+            {
                 result.ChangedBy = jiraIssue.Fields.Creator.DisplayName;
             }
             else
@@ -77,7 +77,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
 
             //result.Title = jiraIssue.Fields.Summary;
 
-            if(jiraIssue.ChangeLog.Total > 1)
+            if (jiraIssue.ChangeLog.Total > 1)
             {
                 Jira3.History predecessor = jiraIssue.ChangeLog.Histories[1];
 
@@ -88,13 +88,13 @@ namespace MDD4All.SpecIF.DataAccess.Jira
 
             result.SetPropertyValue("dcterms:identifier", jiraIssue.Key, _metadataReader);
 
-            
+
 
             AdfToXhtmlConverter adfToXhtmlConverter = new AdfToXhtmlConverter();
 
             string descriptionHtml = adfToXhtmlConverter.ConvertAdfToXhtml(jiraIssue.Fields.Description);
 
-            
+
 
             string mainLanguage = "en";
 
@@ -126,7 +126,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
             }
 
             string secondLanguage = "de";
-            
+
             string foreignLanguageFieldID = GetCustomFieldName(jiraIssue, "Foreign Language");
             if (!string.IsNullOrEmpty(foreignLanguageFieldID))
             {
@@ -154,13 +154,13 @@ namespace MDD4All.SpecIF.DataAccess.Jira
                 }
             }
 
-            if(mainLanguage == secondLanguage)
+            if (mainLanguage == secondLanguage)
             {
-                if(mainLanguage == "en")
+                if (mainLanguage == "en")
                 {
                     secondLanguage = "de";
                 }
-                else if(mainLanguage == "de")
+                else if (mainLanguage == "de")
                 {
                     secondLanguage = "en";
                 }
@@ -176,7 +176,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
             string secondTitleFieldID = GetCustomFieldName(jiraIssue, "Foreign Title");
             string secondTitleContent = "";
 
-            if(!string.IsNullOrEmpty(secondTitleFieldID))
+            if (!string.IsNullOrEmpty(secondTitleFieldID))
             {
                 secondTitleContent = (string)jiraIssue.FieldDictionary[secondTitleFieldID];
             }
@@ -184,7 +184,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
             string secondDescriptionFieldID = GetCustomFieldName(jiraIssue, "Foreign Description");
             string secondDescriptionContent = "";
 
-            if(!string.IsNullOrEmpty(secondDescriptionFieldID))
+            if (!string.IsNullOrEmpty(secondDescriptionFieldID))
             {
                 JObject secondDescriptionJobject = jiraIssue.FieldDictionary[secondDescriptionFieldID] as JObject;
 
@@ -238,7 +238,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
                 descriptionValue.MultilanguageTexts.Add(secondDescription);
 
             }
-            else if(secondLanguage == "en")
+            else if (secondLanguage == "en")
             {
                 MultilanguageText firstTitle = new MultilanguageText
                 {
@@ -297,7 +297,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
 
             string statusValue = status.Name.ToLowerInvariant();
 
-            switch(statusValue)
+            switch (statusValue)
             {
                 case "drafted":
                     result = "V-Status-3";
@@ -343,7 +343,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
             {
                 foreach (KeyValuePair<string, string> keyValuePair in issue.FieldNames)
                 {
-                    if(keyValuePair.Value == "EA GUID")
+                    if (keyValuePair.Value == "EA GUID")
                     {
                         result = keyValuePair.Key;
                         break;
@@ -373,7 +373,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
             return result;
         }
 
-       
+
 
 
         public Resource ConvertToResource(Jira3.JiraWebhookObject jiraWebhookObject)
@@ -387,6 +387,6 @@ namespace MDD4All.SpecIF.DataAccess.Jira
             return result;
         }
 
-        
+
     }
 }

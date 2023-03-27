@@ -1,11 +1,6 @@
 ﻿using MDD4All.SpecIF.DataModels.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 
-namespace MDD4All.SpecIF.DataAccess.Jira
+namespace MDD4All.SpecIF.Converters.Jira
 {
     public class JiraGuidConverter
     {
@@ -29,7 +24,7 @@ namespace MDD4All.SpecIF.DataAccess.Jira
 
             string prefix = "_" + SpecIfGuidGenerator.CalculateSha1Hash(serverURL);
 
-            if(specIfID.StartsWith(prefix))
+            if (specIfID.StartsWith(prefix))
             {
                 result = specIfID.Replace(prefix, "").Replace("_", "-").Substring(1);
             }
